@@ -1,7 +1,9 @@
 package hr.fer.ruazosa.lostnfound;
 
 
+import hr.fer.ruazosa.lostnfound.entity.Notification;
 import hr.fer.ruazosa.lostnfound.entity.User;
+import hr.fer.ruazosa.lostnfound.service.ILostNFoundService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -58,14 +61,24 @@ public class LostNFoundController {
             User loggedUser = pointOfInterestService.loginUser(user);
             if (loggedUser != null) {
                 return new ResponseEntity<Object>(loggedUser, HttpStatus.OK);
-            }
-            else {
+            } else {
                 Map<String, Object> body = new LinkedHashMap<>();
                 body.put("error", "no user found");
                 return new ResponseEntity<Object>(body, HttpStatus.NOT_FOUND);
             }
         }
-
     }
+
+    @GetMapping("/{username}")
+    public User getUser(@PathVariable String username){
+        User user = pointOfInterestService.getUser(username);
+        return user;
+    }
+
+    @GetMapping("/{username}/notifications")
+    public List<Notification> getUserNotifications(@PathVariable String username){
+        return pointOfInterestService.getUser(username).getNotifications();
+    }
+
 
 }
