@@ -29,6 +29,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<Notification> notifications;
 
+    public User() {
+    }
+
     public User(Long id, String firstName, String lastName, String email, String username, String password, List<Notification> notifications) {
         this.id = id;
         this.firstName = firstName;
