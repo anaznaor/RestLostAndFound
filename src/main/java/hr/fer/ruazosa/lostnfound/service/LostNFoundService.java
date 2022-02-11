@@ -1,6 +1,9 @@
-package hr.fer.ruazosa.lostnfound;
+package hr.fer.ruazosa.lostnfound.service;
 
+import hr.fer.ruazosa.lostnfound.entity.Notification;
 import hr.fer.ruazosa.lostnfound.entity.User;
+import hr.fer.ruazosa.lostnfound.repository.UserRepository;
+import hr.fer.ruazosa.lostnfound.service.ILostNFoundService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +17,6 @@ public class LostNFoundService implements ILostNFoundService {
 
     @Override
     public User registerUser(User user) {
-        // TODO check username unique
         boolean unique = checkUsernameUnique(user);
         if(unique)
             return userRepository.save(user);
@@ -37,5 +39,11 @@ public class LostNFoundService implements ILostNFoundService {
             return null;
         }
         return userRepository.findByUserNameAndPassword(user.getUsername(), user.getPassword()).get(0);
+    }
+
+    @Override
+    public User getUser(String username) {
+        User user = userRepository.findByUsername(username);
+        return user;
     }
 }
