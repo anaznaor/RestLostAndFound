@@ -46,27 +46,25 @@ public class LostNFoundController {
 
     @PostMapping("/loginUser")
     public ResponseEntity<Object> loginUser(@RequestBody User user) {
-        // validation
-        if (user == null) {
-            Map<String, Object> body = new LinkedHashMap<>();
-            body.put("error", "no user JSON object in body");
-            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
-        }
-        else if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
-            Map<String, Object> body = new LinkedHashMap<>();
-            body.put("error", "username or password parameters are empty");
-            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
-        }
-        else {
-            User loggedUser = pointOfInterestService.loginUser(user);
-            if (loggedUser != null) {
-                return new ResponseEntity<Object>(loggedUser, HttpStatus.OK);
-            } else {
+            // validation
+            if (user == null) {
                 Map<String, Object> body = new LinkedHashMap<>();
-                body.put("error", "no user found");
-                return new ResponseEntity<Object>(body, HttpStatus.NOT_FOUND);
+                body.put("error", "no user JSON object in body");
+                return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
+            } else if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
+                Map<String, Object> body = new LinkedHashMap<>();
+                body.put("error", "username or password parameters are empty");
+                return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
+            } else {
+                User loggedU = pointOfInterestService.loginUser(user);
+                if (loggedU != null) {
+                    return new ResponseEntity<Object>(loggedU, HttpStatus.OK);
+                } else {
+                    Map<String, Object> body = new LinkedHashMap<>();
+                    body.put("error", "no user found");
+                    return new ResponseEntity<Object>(body, HttpStatus.NOT_FOUND);
+                }
             }
-        }
     }
 
     @GetMapping("/{username}")
@@ -78,6 +76,27 @@ public class LostNFoundController {
     @GetMapping("/{username}/notifications")
     public List<Notification> getUserNotifications(@PathVariable String username){
         return pointOfInterestService.getUser(username).getNotifications();
+    }
+
+
+    @PostMapping("/{username}/putNotification")
+    public ResponseEntity<Object> putNotification(@PathVariable String username, @RequestBody Notification not){
+                ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+                Validator validator = factory.getValidator();
+                Set<ConstraintViolation<Notification>> violations = validator.validate(not);
+
+                Map<String, Object> body = new LinkedHashMap<>();
+                for (ConstraintViolation<Notification> violation : violations) {
+                    body.put(violation.getPropertyPath().toString(), violation.getMessage());
+                }
+                if (!body.isEmpty()) {
+                    return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
+                }
+                User u = pointOfInterestService.getUser(username);
+                not.setUser(u);
+
+        pointOfInterestService.putNotification(not);
+        return new ResponseEntity<>(not, HttpStatus.OK);
     }
 
 

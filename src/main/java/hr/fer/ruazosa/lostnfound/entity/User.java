@@ -26,7 +26,7 @@ public class User {
     private String username;
     @NotBlank(message = "Password name cannot be empty")
     private String password;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     List<Notification> notifications;
 
     public User() {
