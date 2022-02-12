@@ -1,5 +1,7 @@
 package hr.fer.ruazosa.lostnfound.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
@@ -15,30 +17,28 @@ public class Notification {
     @NotBlank(message = "Title cannot be empty")
     @Column(name = "title")
     private String title;
-    @NotBlank(message = "Subject cannot be empty")
     @Column(name = "subject")
-    private String subject;
-    @NotBlank(message = "Date cannot be empty")
-    @Column(name = "date")
-    private Date date;
+    private String subject = "sub";
     @NotBlank(message = "description cannot be empty")
     @Column(name = "description")
     private String description;
     @NotBlank(message = "address cannot be empty")
     @Column(name = "address")
     private String address;
-    @ManyToOne
+    @Column(name = "date")
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private Date date;
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 
-    public Notification(Long id, String title, String type, String description, String address, User user) {
+    public Notification(Long id, String title, String type, String description, String address) {
         this.id = id;
         this.title = title;
         this.subject = type;
-        this.date = new Date();
         this.description = description;
         this.address = address;
-        this.user = user;
+        this.date = date;
     }
 
     public Long getId() {
@@ -65,13 +65,6 @@ public class Notification {
         this.subject = type;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
     public String getDescription() {
         return description;
@@ -102,11 +95,11 @@ public class Notification {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Notification that = (Notification) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(subject, that.subject) && Objects.equals(date, that.date) && Objects.equals(description, that.description) && Objects.equals(address, that.address) && Objects.equals(user, that.user);
+        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(subject, that.subject) && Objects.equals(description, that.description) && Objects.equals(address, that.address) && Objects.equals(user, that.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, subject, date, description, address, user);
+        return Objects.hash(id, title, subject, address, user);
     }
 }
