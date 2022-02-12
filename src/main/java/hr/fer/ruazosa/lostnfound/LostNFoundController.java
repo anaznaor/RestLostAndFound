@@ -46,12 +46,23 @@ public class LostNFoundController {
 
     @PostMapping("/loginUser")
     public ResponseEntity<Object> loginUser(@RequestBody User user) {
-            // validation
-            if (user == null) {
-                Map<String, Object> body = new LinkedHashMap<>();
-                body.put("error", "no user JSON object in body");
-                return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
-            } else if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
+
+        // validation
+        if (user == null) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("error", "no user JSON object in body");
+            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
+        }
+        else if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("error", "username or password parameters are empty");
+            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
+        }
+        else {
+            User loggedUser = pointOfInterestService.loginUser(user);
+            if (loggedUser != null) {
+                return new ResponseEntity<Object>(loggedUser, HttpStatus.OK);
+            } else {
                 Map<String, Object> body = new LinkedHashMap<>();
                 body.put("error", "username or password parameters are empty");
                 return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
@@ -65,6 +76,7 @@ public class LostNFoundController {
                     return new ResponseEntity<Object>(body, HttpStatus.NOT_FOUND);
                 }
             }
+        }
     }
 
     @GetMapping("/{username}")
@@ -77,6 +89,7 @@ public class LostNFoundController {
     public List<Notification> getUserNotifications(@PathVariable String username){
         return pointOfInterestService.getUser(username).getNotifications();
     }
+
 
 
     @PostMapping("/{username}/putNotification")
@@ -99,5 +112,3 @@ public class LostNFoundController {
         return new ResponseEntity<>(not, HttpStatus.OK);
     }
 
-
-}

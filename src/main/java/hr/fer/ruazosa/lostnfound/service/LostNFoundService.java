@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-
+import hr.fer.ruazosa.lostnfound.repository.UserRepository;
+import hr.fer.ruazosa.lostnfound.service.ILostNFoundService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
@@ -39,13 +42,12 @@ public class LostNFoundService implements ILostNFoundService {
 
     @Override
     public User loginUser(User user) {
-            List<User> loggedUserList = userRepository.findByUserNameAndPassword(user.getUsername(), user.getPassword());
-            if (loggedUserList.isEmpty()) {
-                return null;
-            }
 
-            User loggedUser = userRepository.findByUserNameAndPassword(user.getUsername(), user.getPassword()).get(0);
-        return loggedUser;
+        List<User> loggedUserList = userRepository.findByUserNameAndPassword(user.getUsername(), user.getPassword());
+        if (loggedUserList.isEmpty()) {
+            return null;
+        }
+        return userRepository.findByUserNameAndPassword(user.getUsername(), user.getPassword()).get(0);
     }
 
     @Override
