@@ -10,5 +10,8 @@ public interface ILostNFoundService {
     boolean checkUsernameUnique(User user);
     User loginUser(User user);
     User getUser(String username);
+
     Notification putNotification(Notification not);
+    Notification updateNotif(Long id, Notification notif);
+    boolean deleteNot(Long id);
 }

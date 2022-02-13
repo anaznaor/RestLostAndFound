@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -33,6 +35,7 @@ public class Notification {
     private Date date;
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="user_id")
     private User user;
 
@@ -43,6 +46,10 @@ public class Notification {
         this.description = description;
         this.address = address;
         this.date = date;
+    }
+
+    public Notification(){
+
     }
 
     public Long getId() {
@@ -105,5 +112,21 @@ public class Notification {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, subject, address);
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

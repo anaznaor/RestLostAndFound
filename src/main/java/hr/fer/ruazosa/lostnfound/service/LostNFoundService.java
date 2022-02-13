@@ -63,4 +63,32 @@ public class LostNFoundService implements ILostNFoundService {
         Notification notif = notificationRepository.save(not);
         return notif;
     }
+
+    @Override
+    public Notification updateNotif(Long id, Notification notif) {
+        List<Notification> notifList = notificationRepository.findNotifById(id);
+        if(notifList.isEmpty())
+            return null;
+
+        Notification oldNotif = notifList.get(0);
+
+        oldNotif.setAddress(notif.getAddress());
+        oldNotif.setDescription(notif.getDescription());
+        oldNotif.setTitle(notif.getTitle());
+        oldNotif.setType(notif.getType());
+
+        notificationRepository.save(oldNotif);
+        return oldNotif;
+    }
+
+    @Override
+    public boolean deleteNot(Long id) {
+        List<Notification> notifList = notificationRepository.findNotifById(id);
+
+        if(notifList.isEmpty())
+            return false;
+
+        notificationRepository.delete(notifList.get(0));
+        return true;
+    }
 }

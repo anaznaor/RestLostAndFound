@@ -13,10 +13,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 public class LostNFoundController {
@@ -79,7 +76,7 @@ public class LostNFoundController {
 
     @GetMapping("/{username}/notifications")
     public List<Notification> getUserNotifications(@PathVariable String username) {
-        return pointOfInterestService.getUser(username).getNotifications();
+        return this.getUser(username).getNotifications();
     }
 
 
@@ -102,5 +99,27 @@ public class LostNFoundController {
         return new ResponseEntity<>(not, HttpStatus.OK);
     }
 
+    @PostMapping("/{id}/updateNotif")
+    public ResponseEntity<Object> updateNotif(@PathVariable Long id, @RequestBody Notification notif){
+        Notification not = pointOfInterestService.updateNotif(id, notif);
+
+        if(not == null)
+            return new ResponseEntity<>(not, HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(not, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/deleteNotif")
+    public ResponseEntity<Object> deleteNotif(@PathVariable Long id){
+        Map<String, Object> body = new HashMap<>();
+
+        if(pointOfInterestService.deleteNot(id)){
+            body.put("success", "Deleted");
+            return new ResponseEntity<>(body, HttpStatus.OK);
+        }
+
+        body.put("error", "not found");
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
 }
 
