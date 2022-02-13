@@ -47,7 +47,7 @@ public class LostNFoundService implements ILostNFoundService {
         if (loggedUserList.isEmpty()) {
             return null;
         }
-        return userRepository.findByUserNameAndPassword(user.getUsername(), user.getPassword()).get(0);
+        return loggedUserList.get(0);
     }
 
     @Override

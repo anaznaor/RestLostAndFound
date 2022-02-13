@@ -14,7 +14,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,7 +37,7 @@ public class LostNFoundController {
             return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(!pointOfInterestService.checkUsernameUnique(user))
+        if (!pointOfInterestService.checkUsernameUnique(user))
             return new ResponseEntity<Object>(user, HttpStatus.NOT_ACCEPTABLE);
         pointOfInterestService.registerUser(user);
         return new ResponseEntity<Object>(user, HttpStatus.OK);
@@ -46,7 +45,6 @@ public class LostNFoundController {
 
     @PostMapping("/loginUser")
     public ResponseEntity<Object> loginUser(@RequestBody User user) {
-
         // validation
         if (user == null) {
             Map<String, Object> body = new LinkedHashMap<>();
@@ -62,53 +60,46 @@ public class LostNFoundController {
             User loggedUser = pointOfInterestService.loginUser(user);
             if (loggedUser != null) {
                 return new ResponseEntity<Object>(loggedUser, HttpStatus.OK);
-            } else {
+            }
+            else {
                 Map<String, Object> body = new LinkedHashMap<>();
-                body.put("error", "username or password parameters are empty");
-                return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
-            } else {
-                User loggedU = pointOfInterestService.loginUser(user);
-                if (loggedU != null) {
-                    return new ResponseEntity<Object>(loggedU, HttpStatus.OK);
-                } else {
-                    Map<String, Object> body = new LinkedHashMap<>();
-                    body.put("error", "no user found");
-                    return new ResponseEntity<Object>(body, HttpStatus.NOT_FOUND);
-                }
+                body.put("error", "no user found");
+                return new ResponseEntity<Object>(body, HttpStatus.NOT_FOUND);
             }
         }
+
     }
 
     @GetMapping("/{username}")
-    public User getUser(@PathVariable String username){
+    public User getUser(@PathVariable String username) {
         User user = pointOfInterestService.getUser(username);
         return user;
     }
 
     @GetMapping("/{username}/notifications")
-    public List<Notification> getUserNotifications(@PathVariable String username){
+    public Set<Notification> getUserNotifications(@PathVariable String username) {
         return pointOfInterestService.getUser(username).getNotifications();
     }
 
 
-
     @PostMapping("/{username}/putNotification")
-    public ResponseEntity<Object> putNotification(@PathVariable String username, @RequestBody Notification not){
-                ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-                Validator validator = factory.getValidator();
-                Set<ConstraintViolation<Notification>> violations = validator.validate(not);
+    public ResponseEntity<Object> putNotification(@PathVariable String username, @RequestBody Notification not) {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<Notification>> violations = validator.validate(not);
 
-                Map<String, Object> body = new LinkedHashMap<>();
-                for (ConstraintViolation<Notification> violation : violations) {
-                    body.put(violation.getPropertyPath().toString(), violation.getMessage());
-                }
-                if (!body.isEmpty()) {
-                    return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
-                }
-                User u = pointOfInterestService.getUser(username);
-                not.setUser(u);
+        Map<String, Object> body = new LinkedHashMap<>();
+        for (ConstraintViolation<Notification> violation : violations) {
+            body.put(violation.getPropertyPath().toString(), violation.getMessage());
+        }
+        if (!body.isEmpty()) {
+            return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
+        }
+        User u = pointOfInterestService.getUser(username);
+        not.setUser(u);
 
         pointOfInterestService.putNotification(not);
         return new ResponseEntity<>(not, HttpStatus.OK);
     }
+}
 

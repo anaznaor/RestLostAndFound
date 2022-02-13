@@ -32,7 +32,7 @@ public class Notification {
     @JoinColumn(name="user_id")
     private User user;
 
-    public Notification(Long id, String title, String type, String description, String address) {
+    public Notification(Long id, String title, String type, String description, String address, Date date) {
         this.id = id;
         this.title = title;
         this.subject = type;
