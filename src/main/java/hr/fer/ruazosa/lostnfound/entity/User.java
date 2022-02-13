@@ -3,8 +3,10 @@ package hr.fer.ruazosa.lostnfound.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name="users")
@@ -27,22 +29,22 @@ public class User {
     @NotBlank(message = "Password name cannot be empty")
     private String password;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    List<Notification> notifications;
+    Set<Notification> notifications;
 
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, String email, String username, String password, List<Notification> notifications) {
+    public User(Long id, String firstName, String lastName, String email, String username, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.notifications = notifications;
+        this.notifications = new LinkedHashSet<Notification>();
     }
 
-    public void setNotifications(List<Notification> notifications) { this.notifications = notifications; }
+    public void setNotifications(Set<Notification> notifications) { this.notifications = notifications; }
 
     public void setId(Long id) {
         this.id = id;
@@ -84,7 +86,7 @@ public class User {
         return email;
     }
 
-    public List<Notification> getNotifications() { return notifications; }
+    public Set<Notification> getNotifications() { return notifications; }
 
     public String getUsername() {
         return username;
@@ -99,11 +101,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(notifications, user.notifications);
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(username, user.username) && Objects.equals(password, user.password) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, username, password, notifications);
+        return Objects.hash(id, firstName, lastName, email, username, password);
     }
 }
