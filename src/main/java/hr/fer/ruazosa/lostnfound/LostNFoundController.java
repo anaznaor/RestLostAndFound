@@ -97,9 +97,8 @@ public class LostNFoundController {
             return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
         }
         User u = pointOfInterestService.getUser(username);
-
-        pointOfInterestService.putNotification(not);
         not.setUser(u);
+        pointOfInterestService.putNotification(not);
         return new ResponseEntity<>(not, HttpStatus.OK);
     }
 
