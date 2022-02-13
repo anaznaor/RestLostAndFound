@@ -1,12 +1,12 @@
 package hr.fer.ruazosa.lostnfound.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name="users")
@@ -28,8 +28,9 @@ public class User {
     private String username;
     @NotBlank(message = "Password name cannot be empty")
     private String password;
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    Set<Notification> notifications;
+    List<Notification> notifications;
 
     public User() {
     }
@@ -41,10 +42,10 @@ public class User {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.notifications = new LinkedHashSet<Notification>();
+        this.notifications = new LinkedList<Notification>();
     }
 
-    public void setNotifications(Set<Notification> notifications) { this.notifications = notifications; }
+    public void setNotifications(List<Notification> notifications) { this.notifications = notifications; }
 
     public void setId(Long id) {
         this.id = id;
@@ -86,7 +87,7 @@ public class User {
         return email;
     }
 
-    public Set<Notification> getNotifications() { return notifications; }
+    public List<Notification> getNotifications() { return notifications; }
 
     public String getUsername() {
         return username;

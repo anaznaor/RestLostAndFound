@@ -43,11 +43,11 @@ public class LostNFoundService implements ILostNFoundService {
     @Override
     public User loginUser(User user) {
 
-        List<User> loggedUserList = userRepository.findByUserNameAndPassword(user.getUsername(), user.getPassword());
-        if (loggedUserList.isEmpty()) {
+        List<User> loggedUser = userRepository.findByUserNameAndPassword(user.getUsername(), user.getPassword());
+        if(loggedUser.isEmpty())
             return null;
-        }
-        return loggedUserList.get(0);
+
+        return loggedUser.get(0);
     }
 
     @Override

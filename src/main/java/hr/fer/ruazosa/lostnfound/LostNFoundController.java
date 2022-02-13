@@ -14,6 +14,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,8 +40,8 @@ public class LostNFoundController {
 
         if (!pointOfInterestService.checkUsernameUnique(user))
             return new ResponseEntity<Object>(user, HttpStatus.NOT_ACCEPTABLE);
-        pointOfInterestService.registerUser(user);
-        return new ResponseEntity<Object>(user, HttpStatus.OK);
+        User ru = pointOfInterestService.registerUser(user);
+        return new ResponseEntity<Object>(ru, HttpStatus.OK);
     }
 
     @PostMapping("/loginUser")
@@ -77,7 +78,7 @@ public class LostNFoundController {
     }
 
     @GetMapping("/{username}/notifications")
-    public Set<Notification> getUserNotifications(@PathVariable String username) {
+    public List<Notification> getUserNotifications(@PathVariable String username) {
         return pointOfInterestService.getUser(username).getNotifications();
     }
 
@@ -96,10 +97,11 @@ public class LostNFoundController {
             return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
         }
         User u = pointOfInterestService.getUser(username);
-        not.setUser(u);
 
         pointOfInterestService.putNotification(not);
+        not.setUser(u);
         return new ResponseEntity<>(not, HttpStatus.OK);
     }
+
 }
 

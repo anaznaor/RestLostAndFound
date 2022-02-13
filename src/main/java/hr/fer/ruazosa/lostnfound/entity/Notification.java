@@ -1,6 +1,9 @@
 package hr.fer.ruazosa.lostnfound.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -28,6 +31,7 @@ public class Notification {
     @Column(name = "date")
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date date;
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
@@ -100,6 +104,6 @@ public class Notification {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, subject, address, user);
+        return Objects.hash(id, title, subject, address);
     }
 }
