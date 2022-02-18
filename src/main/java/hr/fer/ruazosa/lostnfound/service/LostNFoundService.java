@@ -13,6 +13,8 @@ import hr.fer.ruazosa.lostnfound.repository.UserRepository;
 import hr.fer.ruazosa.lostnfound.service.ILostNFoundService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -60,6 +62,7 @@ public class LostNFoundService implements ILostNFoundService {
 
     @Override
     public Notification putNotification(Notification not) {
+
         Notification notif = notificationRepository.save(not);
         return notif;
     }
@@ -90,5 +93,11 @@ public class LostNFoundService implements ILostNFoundService {
 
         notificationRepository.delete(notifList.get(0));
         return true;
+    }
+
+    @Override
+    public List<Notification> getAllNotifications(User u) {
+
+        return notificationRepository.findAll();
     }
 }

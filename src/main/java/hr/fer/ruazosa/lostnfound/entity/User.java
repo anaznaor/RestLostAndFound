@@ -30,7 +30,7 @@ public class User {
     private String password;
     @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    List<Notification> notifications;
+    private List<Notification> notifications;
 
     public User() {
     }

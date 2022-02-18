@@ -121,5 +121,12 @@ public class LostNFoundController {
         body.put("error", "not found");
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/{username}/allNotifs")
+    public List<Notification> getAllNotifs(@PathVariable String username){
+        User u = pointOfInterestService.getUser(username);
+
+        return pointOfInterestService.getAllNotifications(u);
+    }
 }
 
