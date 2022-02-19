@@ -23,7 +23,7 @@ public class Notification {
     @Column(name = "title")
     private String title;
     @Column(name = "subject")
-    private String subject = "sub";
+    private String subject;
     @NotBlank(message = "description cannot be empty")
     @Column(name = "description")
     private String description;

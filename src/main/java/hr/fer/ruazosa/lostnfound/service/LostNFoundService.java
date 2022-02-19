@@ -97,7 +97,18 @@ public class LostNFoundService implements ILostNFoundService {
 
     @Override
     public List<Notification> getAllNotifications(User u) {
+        List<Notification> notifRep = new LinkedList<>();
 
-        return notificationRepository.findAll();
+        for(User user : userRepository.findAll()){
+            if(! user.equals(u)){
+                for(Notification notif: user.getNotifications()){
+                    notif.setUser(user);
+                    notifRep.add(notif);
+                }
+            }
+        }
+
+        return notifRep;
+
     }
 }
