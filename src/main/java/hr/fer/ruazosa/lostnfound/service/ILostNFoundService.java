@@ -16,4 +16,5 @@ public interface ILostNFoundService {
     boolean deleteNot(Long id);
 
     List<Notification> getAllNotifications(User u);
+    Notification getNotification(Long id);
 }

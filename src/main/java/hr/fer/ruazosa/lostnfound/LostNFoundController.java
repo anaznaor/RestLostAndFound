@@ -128,5 +128,11 @@ public class LostNFoundController {
 
         return pointOfInterestService.getAllNotifications(u);
     }
+
+    @GetMapping("/notifications/{id}")
+    public Notification getNotification(@PathVariable Long id){
+        Notification notification = pointOfInterestService.getNotification(id);
+        return notification;
+    }
 }
 
