@@ -100,4 +100,12 @@ public class LostNFoundService implements ILostNFoundService {
 
         return notificationRepository.findAll();
     }
+
+    @Override
+    public Notification getNotification(Long id) {
+        List<Notification> notifList = notificationRepository.findNotifById(id);
+        if(notifList.isEmpty())
+            return null;
+        return notifList.get(0);
+    }
 }
