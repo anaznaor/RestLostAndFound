@@ -155,4 +155,14 @@ public class LostNFoundService implements ILostNFoundService {
 
         return this.firebaseMessaging.send(message);
     }
+
+    @Override
+    public User setToken(String username, String token) {
+        List<User> user = userRepository.findByUsername(username);
+        if(user.isEmpty())
+            return null;
+        User u = user.get(0);
+        u.setToken(token);
+        return userRepository.save(u);
+    }
 }

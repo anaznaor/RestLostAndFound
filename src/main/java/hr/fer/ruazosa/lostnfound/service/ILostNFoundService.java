@@ -21,4 +21,5 @@ public interface ILostNFoundService {
     Notification findNotification(Long id);
 
     public String sendNotification(Note note, String token) throws FirebaseMessagingException;
+    User setToken(String username, String token);
 }

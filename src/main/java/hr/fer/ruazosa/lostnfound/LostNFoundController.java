@@ -147,5 +147,13 @@ public class LostNFoundController {
                                    @RequestParam String token) throws FirebaseMessagingException {
         return pointOfInterestService.sendNotification(note, token);
     }
+
+    @PostMapping("/{username}/setToken")
+    public ResponseEntity<Object> setToken(@PathVariable String username, @RequestBody String token){
+        User user = pointOfInterestService.setToken(username, token);
+        if(user == null)
+            return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }
 
