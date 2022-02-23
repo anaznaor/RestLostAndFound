@@ -1,6 +1,8 @@
 package hr.fer.ruazosa.lostnfound;
 
 
+import com.google.firebase.messaging.FirebaseMessagingException;
+import hr.fer.ruazosa.lostnfound.entity.Note;
 import hr.fer.ruazosa.lostnfound.entity.Notification;
 import hr.fer.ruazosa.lostnfound.entity.User;
 import hr.fer.ruazosa.lostnfound.service.ILostNFoundService;
@@ -137,6 +139,21 @@ public class LostNFoundController {
         Notification notif = pointOfInterestService.findNotification(id);
 
         return notif;
+    }
+
+    @PostMapping("/send-notification")
+    @ResponseBody
+    public String sendNotification(@RequestBody Note note,
+                                   @RequestParam String token) throws FirebaseMessagingException {
+        return pointOfInterestService.sendNotification(note, token);
+    }
+
+    @PostMapping("/{username}/setToken")
+    public ResponseEntity<Object> setToken(@PathVariable String username, @RequestBody String token){
+        User user = pointOfInterestService.setToken(username, token);
+        if(user == null)
+            return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
 

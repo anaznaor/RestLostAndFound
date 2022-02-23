@@ -1,24 +1,41 @@
 package hr.fer.ruazosa.lostnfound.service;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import hr.fer.ruazosa.lostnfound.entity.Note;
 import hr.fer.ruazosa.lostnfound.entity.Notification;
 import hr.fer.ruazosa.lostnfound.entity.User;
 import hr.fer.ruazosa.lostnfound.repository.NotificationRepository;
 import hr.fer.ruazosa.lostnfound.repository.UserRepository;
-import hr.fer.ruazosa.lostnfound.service.ILostNFoundService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import hr.fer.ruazosa.lostnfound.repository.UserRepository;
-import hr.fer.ruazosa.lostnfound.service.ILostNFoundService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class LostNFoundService implements ILostNFoundService {
+
+    @Bean
+    FirebaseMessaging firebaseMessaging() throws IOException {
+        GoogleCredentials googleCredentials = GoogleCredentials
+                .fromStream(new ClassPathResource("firebase-service-account.json").getInputStream());
+        FirebaseOptions firebaseOptions = FirebaseOptions
+                .builder()
+                .setCredentials(googleCredentials)
+                .build();
+        FirebaseApp app = FirebaseApp.initializeApp(firebaseOptions, "my-app");
+        return FirebaseMessaging.getInstance(app);
+    }
+
+    private FirebaseMessaging firebaseMessaging;
 
     @Autowired
     private UserRepository userRepository;
@@ -119,5 +136,33 @@ public class LostNFoundService implements ILostNFoundService {
             return null;
 
         return list.get(0);
+    }
+
+    public String sendNotification(Note note, String token) throws FirebaseMessagingException {
+
+        com.google.firebase.messaging.Notification notification = com.google.firebase.messaging.Notification
+                .builder()
+                .setTitle(note.getSubject())
+                .setBody(note.getContent())
+                .build();
+
+        Message message = Message
+                .builder()
+                .setToken(token)
+                .setNotification(notification)
+                .putAllData(note.getData())
+                .build();
+
+        return this.firebaseMessaging.send(message);
+    }
+
+    @Override
+    public User setToken(String username, String token) {
+        List<User> user = userRepository.findByUsername(username);
+        if(user.isEmpty())
+            return null;
+        User u = user.get(0);
+        u.setToken(token);
+        return userRepository.save(u);
     }
 }
