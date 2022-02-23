@@ -38,6 +38,8 @@ public class Notification {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="user_id")
     private User user;
+    @Column(name = "username")
+    private String username;
 
     public Notification(Long id, String title, String type, String description, String address, Date date) {
         this.id = id;
@@ -46,6 +48,14 @@ public class Notification {
         this.description = description;
         this.address = address;
         this.date = date;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Notification(){

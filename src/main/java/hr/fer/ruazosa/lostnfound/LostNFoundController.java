@@ -36,7 +36,7 @@ public class LostNFoundController {
         }
 
         if (!pointOfInterestService.checkUsernameUnique(user))
-            return new ResponseEntity<Object>(user, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<Object>(user, HttpStatus.FORBIDDEN);
         User ru = pointOfInterestService.registerUser(user);
         return new ResponseEntity<Object>(ru, HttpStatus.OK);
     }
@@ -93,8 +93,11 @@ public class LostNFoundController {
         if (!body.isEmpty()) {
             return new ResponseEntity<Object>(body, HttpStatus.NOT_ACCEPTABLE);
         }
+
+
         User u = pointOfInterestService.getUser(username);
         not.setUser(u);
+        not.setUsername(username);
         pointOfInterestService.putNotification(not);
         return new ResponseEntity<>(not, HttpStatus.OK);
     }
@@ -127,6 +130,13 @@ public class LostNFoundController {
         User u = pointOfInterestService.getUser(username);
 
         return pointOfInterestService.getAllNotifications(u);
+    }
+
+    @GetMapping("/notifications/{id}")
+    public Notification getNotification(@PathVariable Long id){
+        Notification notif = pointOfInterestService.findNotification(id);
+
+        return notif;
     }
 }
 
