@@ -1,5 +1,7 @@
 package hr.fer.ruazosa.lostnfound.service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
+import hr.fer.ruazosa.lostnfound.entity.Note;
 import hr.fer.ruazosa.lostnfound.entity.Notification;
 import hr.fer.ruazosa.lostnfound.entity.User;
 
@@ -17,4 +19,6 @@ public interface ILostNFoundService {
 
     List<Notification> getAllNotifications(User u);
     Notification findNotification(Long id);
+
+    public String sendNotification(Note note, String token) throws FirebaseMessagingException;
 }

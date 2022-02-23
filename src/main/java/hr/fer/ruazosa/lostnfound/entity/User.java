@@ -28,6 +28,8 @@ public class User {
     private String username;
     @NotBlank(message = "Password name cannot be empty")
     private String password;
+
+    private String token;
     @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Notification> notifications;
@@ -35,13 +37,14 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, String email, String username, String password) {
+    public User(Long id, String firstName, String lastName, String email, String username, String password, String token) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
         this.password = password;
+        this.token = token;
         this.notifications = new LinkedList<Notification>();
     }
 
@@ -97,16 +100,24 @@ public class User {
         return password;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(username, user.username) && Objects.equals(password, user.password) ;
+        return id.equals(user.id) && firstName.equals(user.firstName) && lastName.equals(user.lastName) && email.equals(user.email) && username.equals(user.username) && password.equals(user.password) && token.equals(user.token) && Objects.equals(notifications, user.notifications);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, username, password);
+        return Objects.hash(id, firstName, lastName, email, username, password, token, notifications);
     }
 }
