@@ -141,10 +141,11 @@ public class LostNFoundController {
         return notif;
     }
 
-    @PostMapping("/send-notification")
+    @PostMapping("/{username}/send-notification")
     @ResponseBody
     public String sendNotification(@RequestBody Note note,
-                                   @RequestParam String token) throws FirebaseMessagingException {
+                                   @PathVariable String username) throws FirebaseMessagingException {
+        String token = pointOfInterestService.getUser(username).getToken();
         return pointOfInterestService.sendNotification(note, token);
     }
 
@@ -154,6 +155,12 @@ public class LostNFoundController {
         if(user == null)
             return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/{username}/getToken")
+    public ResponseEntity<String> getToken(@PathVariable String username){
+        User user = pointOfInterestService.getUser(username);
+        return new ResponseEntity<>(user.getToken(), HttpStatus.OK);
     }
 }
 

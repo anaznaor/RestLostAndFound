@@ -28,7 +28,7 @@ public class User {
     private String username;
     @NotBlank(message = "Password name cannot be empty")
     private String password;
-
+    @Column(name = "token")
     private String token;
     @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
